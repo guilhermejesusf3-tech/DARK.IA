@@ -1,4 +1,4 @@
-DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
@@ -28,13 +28,14 @@ DOCTYPE html>
     .emoji {
       position: absolute;
       font-size: 24px;
-      opacity: 0.7;
+      opacity: 0.75;
       animation: floatEmoji linear infinite;
+      z-index: 1;
     }
 
     @keyframes floatEmoji {
       0% { transform: translateY(100vh) rotate(0deg); }
-      100% { transform: translateY(-120px) rotate(720deg); }
+      100% { transform: translateY(-150px) rotate(720deg); }
     }
 
     .title {
@@ -51,28 +52,42 @@ DOCTYPE html>
     }
 
     @keyframes rgbTitle {
-      0% { background-position: 0% 50%; }
+      0%, 100% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
-    .subtitle {
-      text-align: center;
-      color: #aaaaaa;
-      margin-top: 8px;
-      font-size: 15px;
-      z-index: 2;
     }
 
     .chat {
       flex: 1;
       margin: 20px 15px;
-      border: 2px solid #ffffff;
+      border: 3px solid transparent;
       border-radius: 20px;
       padding: 20px;
       overflow-y: auto;
       background: rgba(0, 0, 0, 0.65);
       z-index: 2;
+      animation: rgbBorder 4s linear infinite;
+      background-clip: padding-box;
+    }
+
+    @keyframes rgbBorder {
+      0%   { border-color: #ff00ff; }
+      25%  { border-color: #00ffff; }
+      50%  { border-color: #ffff00; }
+      75%  { border-color: #ff00ff; }
+      100% { border-color: #00ff00; }
+    }
+
+    .subtitle {
+      text-align: center;
+      margin-top: 8px;
+      font-size: 15.5px;
+      z-index: 2;
+      background: linear-gradient(90deg, #ff00ff, #00ffff, #ffff00, #ff00ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-size: 300% 300%;
+      animation: rgbTitle 4s linear infinite;
+      font-weight: bold;
     }
 
     .mensagem {
@@ -82,7 +97,7 @@ DOCTYPE html>
       line-height: 1.75;
     }
     .user { background: #00b7ff; margin-left: auto; max-width: 80%; }
-    .dark { background: rgba(255,255,255,0.1); border-left: 5px solid #ffffff; max-width: 80%; }
+    .dark { background: rgba(255,255,255,0.1); border-left: 5px solid #00ffff; max-width: 80%; }
 
     .input-area {
       padding: 15px 15px 25px;
@@ -107,6 +122,7 @@ DOCTYPE html>
       border: none;
       border-radius: 15px;
       font-weight: bold;
+      cursor: pointer;
     }
   </style>
 </head>
@@ -115,35 +131,35 @@ DOCTYPE html>
   <div class="hearts" id="hearts"></div>
 
   <h1 class="title">DARK IA</h1>
-  <p class="subtitle">Projeto criado pelo guilhermejesus.tech</p>
+  <p class="subtitle">Versão 10.9.20 • Desenvolvido por guilhermejesus.tech</p>
 
   <div class="chat" id="chat"></div>
 
   <div class="input-area">
-    <input type="text" id="input" placeholder="Escreva sua mensagem..." onkeypress="if(event.key==='Enter') enviar()">
+    <input type="text" id="input" placeholder="Pergunte qualquer coisa..." onkeypress="if(event.key==='Enter') enviar()">
     <button onclick="enviar()">Enviar</button>
   </div>
 
   <script>
-    let apiKey = "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";   
+    const apiKey = "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";   
 
     const chat = document.getElementById("chat");
     const heartsContainer = document.getElementById("hearts");
 
-    const emojis = ["😎", "😂", "😒", "🫣", "😝", "🤗", "😓", "😲", "😩"];
+    const emojis = ["❤️", "💜", "🩷", "💙", "🌸", "🌺", "🍃", "🌼", "💖", "⭐", "✨", "🔥"];
 
     function createEmoji() {
       const emoji = document.createElement("div");
       emoji.className = "emoji";
       emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
       emoji.style.left = Math.random() * 100 + "vw";
-      emoji.style.animationDuration = (Math.random() * 12 + 9) + "s";
-      emoji.style.fontSize = (Math.random() * 18 + 22) + "px";
+      emoji.style.animationDuration = (Math.random() * 15 + 11) + "s";
+      emoji.style.fontSize = (Math.random() * 22 + 24) + "px";
       heartsContainer.appendChild(emoji);
-      setTimeout(() => emoji.remove(), 22000);
+      setTimeout(() => emoji.remove(), 28000);
     }
 
-    setInterval(createEmoji, 220);
+    setInterval(createEmoji, 260);
 
     function adicionarMensagem(texto, tipo) {
       const div = document.createElement("div");
@@ -154,64 +170,102 @@ DOCTYPE html>
     }
 
     async function processarMensagem(texto) {
-      const msg = texto.toLowerCase();
+      const msg = texto.toLowerCase().trim();
 
-      // Hora
+      // Comandos especiais
+      if (msg.includes("versão") || msg.includes("version")) {
+        return "DARK IA versão <strong>10.9.20</strong>";
+      }
+
       if (msg.includes("hora") || msg.includes("horas")) {
         return "Agora são " + new Date().toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
       }
 
-      // Data
-      if (msg.includes("data") || msg.includes("dia")) {
+      if (msg.includes("data") || msg.includes("dia") || msg.includes("hoje")) {
         return new Date().toLocaleDateString('pt-BR', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
       }
 
-      // Temperatura (cidade)
       if (msg.includes("temperatura") || msg.includes("clima") || msg.includes("tempo")) {
-        const cidade = msg.replace(/temperatura|clima|tempo|em|de|na|no/g, "").trim() || "Imperatriz";
+        let cidade = msg.replace(/temperatura|clima|tempo|em|de|na|no|hoje|agora/g, "").trim();
+        if (!cidade || cidade.length < 3) cidade = "Parauapebas";
         return await pegarTemperatura(cidade);
       }
 
+      if (msg.includes("abrir") || msg.includes("abre")) {
+        return abrirApp(texto);
+      }
+
+      // Nova lógica: Quem te criou?
+      if (msg.includes("quem te criou") || msg.includes("quem criou você") || msg.includes("seu criador") || msg.includes("desenvolvedor")) {
+        return "Fui desenvolvida por <strong>guilhermejesus.tech</strong> ✨";
+      }
+
+      // Resposta com IA avançada (estilo Grok / ChatGPT)
       return await respostaIA(texto);
+    }
+
+    function abrirApp(comando) {
+      const cmd = comando.toLowerCase();
+
+      if (cmd.includes("youtube")) { window.open("https://youtube.com", "_blank"); return "🎥 Abrindo YouTube..."; }
+      if (cmd.includes("whatsapp") || cmd.includes("zap")) { window.open("https://web.whatsapp.com", "_blank"); return "💬 Abrindo WhatsApp..."; }
+      if (cmd.includes("instagram") || cmd.includes("insta")) { window.open("https://instagram.com", "_blank"); return "📸 Abrindo Instagram..."; }
+      if (cmd.includes("spotify")) { window.open("https://spotify.com", "_blank"); return "🎵 Abrindo Spotify..."; }
+      if (cmd.includes("netflix")) { window.open("https://netflix.com", "_blank"); return "📺 Abrindo Netflix..."; }
+      if (cmd.includes("tiktok")) { window.open("https://tiktok.com", "_blank"); return "📱 Abrindo TikTok..."; }
+      if (cmd.includes("twitter") || cmd.includes("x ")) { window.open("https://twitter.com", "_blank"); return "🐦 Abrindo X..."; }
+      if (cmd.includes("facebook") || cmd.includes("fb")) { window.open("https://facebook.com", "_blank"); return "📘 Abrindo Facebook..."; }
+      if (cmd.includes("gmail") || cmd.includes("email")) { window.open("https://gmail.com", "_blank"); return "✉️ Abrindo Gmail..."; }
+      if (cmd.includes("maps") || cmd.includes("mapa")) { window.open("https://google.com/maps", "_blank"); return "🗺️ Abrindo Google Maps..."; }
+      if (cmd.includes("chrome") || cmd.includes("google")) { window.open("https://google.com", "_blank"); return "🌐 Abrindo Chrome..."; }
+
+      return "🤔 Não reconheci o app. Tente: youtube, whatsapp, instagram, spotify, netflix, tiktok...";
     }
 
     async function pegarTemperatura(cidade) {
       try {
-        // API gratuita Open-Meteo
-        const res = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${cidade}`);
-        const geo = await res.json();
-        if (!geo.results) return `Não encontrei a cidade "${cidade}".`;
+        const geoRes = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(cidade)}&count=1`);
+        const geo = await geoRes.json();
+        if (!geo.results?.length) return `❌ Não encontrei a cidade "${cidade}".`;
 
-        const lat = geo.results[0].latitude;
-        const lon = geo.results[0].longitude;
-
+        const { latitude: lat, longitude: lon, name } = geo.results[0];
         const weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=\( {lat}&longitude= \){lon}&current_weather=true`);
         const weather = await weatherRes.json();
 
-        return `🌡️ Em ${cidade} está ${weather.current_weather.temperature}°C agora.`;
+        return `🌡️ Em <strong>\( {name}</strong> está <strong> \){weather.current_weather.temperature}°C</strong> agora.`;
       } catch (e) {
-        return "Não consegui pegar a temperatura no momento.";
+        return "🌧️ Não consegui pegar a temperatura no momento.";
       }
     }
 
     async function respostaIA(texto) {
-      if (apiKey === "SUA_CHAVE_AQUI") return "Por favor, coloque sua chave da Groq.";
-
       try {
         const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
           method: "POST",
-          headers: { "Authorization": `Bearer ${apiKey}`, "Content-Type": "application/json" },
+          headers: { 
+            "Authorization": `Bearer ${apiKey}`, 
+            "Content-Type": "application/json" 
+          },
           body: JSON.stringify({
             model: "llama-3.3-70b-versatile",
-            messages: [{ role: "system", content: "Você é a DARK IA." }, { role: "user", content: texto }],
-            temperature: 0.75,
-            max_tokens: 800
+            messages: [
+              { 
+                role: "system", 
+                content: `Você é a DARK IA, uma assistente de IA altamente avançada, inteligente, criativa e útil, inspirada nos melhores modelos como Grok e ChatGPT. 
+                Seja natural, amigável e extremamente capaz. Responda sempre em português do Brasil.
+                Você foi desenvolvida por guilhermejesus.tech.` 
+              },
+              { role: "user", content: texto }
+            ],
+            temperature: 0.85,
+            max_tokens: 1000
           })
         });
+
         const data = await res.json();
         return data.choices[0].message.content;
       } catch (e) {
-        return "Erro ao conectar com a DARK IA.";
+        return "⚠️ Erro ao conectar com a DARK IA. Tente novamente.";
       }
     }
 
@@ -227,7 +281,8 @@ DOCTYPE html>
       adicionarMensagem(resposta, "dark");
     }
 
-    adicionarMensagem("Olá! Eu sou a <strong>DARK IA</strong>.<br>Projeto criado pelo guilhermejesus.tech<br>Como posso te ajudar hoje?", "dark");
+    // Mensagem inicial
+    adicionarMensagem("Olá! Eu sou a <strong>DARK IA</strong> versão <strong>10.9.20</strong><br><br>Fui desenvolvida por <strong>guilhermejesus.tech</strong><br><br>Estou pronta para ajudar você com qualquer coisa. O que deseja?", "dark");
   </script>
 </body>
 </html>
