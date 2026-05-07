@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DARK IA</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      background: #000000;
+      font-family: Arial, sans-serif;
+      color: white;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .hearts {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .emoji {
+      position: absolute;
+      font-size: 24px;
+      opacity: 0.7;
+      animation: floatEmoji linear infinite;
+    }
+
+    @keyframes floatEmoji {
+      0% { transform: translateY(100vh) rotate(0deg); }
+      100% { transform: translateY(-120px) rotate(720deg); }
+    }
+
+    .title {
+      text-align: center;
+      margin-top: 35px;
+      font-size: 42px;
+      font-weight: bold;
+      background: linear-gradient(90deg, #ff00ff, #00ffff, #ffff00, #ff00ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-size: 300% 300%;
+      animation: rgbTitle 3.5s linear infinite;
+      z-index: 2;
+    }
+
+    @keyframes rgbTitle {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #aaaaaa;
+      margin-top: 8px;
+      font-size: 15px;
+      z-index: 2;
+    }
+
+    .chat {
+      flex: 1;
+      margin: 20px 15px;
+      border: 2px solid #ffffff;
+      border-radius: 20px;
+      padding: 20px;
+      overflow-y: auto;
+      background: rgba(0, 0, 0, 0.65);
+      z-index: 2;
+    }
+
+    .mensagem {
+      padding: 15px 18px;
+      border-radius: 16px;
+      margin: 18px 0;
+      line-height: 1.75;
+    }
+    .user { background: #00b7ff; margin-left: auto; max-width: 80%; }
+    .dark { background: rgba(255,255,255,0.1); border-left: 5px solid #ffffff; max-width: 80%; }
+
+    .input-area {
+      padding: 15px 15px 25px;
+      display: flex;
+      gap: 10px;
+      background: #000000;
+      z-index: 2;
+    }
+    input {
+      flex: 1;
+      padding: 17px;
+      border: 2px solid #ffffff;
+      border-radius: 15px;
+      background: #111111;
+      color: white;
+      font-size: 16.5px;
+    }
+    button {
+      padding: 0 30px;
+      background: #ffffff;
+      color: black;
+      border: none;
+      border-radius: 15px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="hearts" id="hearts"></div>
+
+  <h1 class="title">DARK IA</h1>
+  <p class="subtitle">Projeto criado pelo guilhermejesus.tech</p>
+
+  <div class="chat" id="chat"></div>
+
+  <div class="input-area">
+    <input type="text" id="input" placeholder="Escreva sua mensagem..." onkeypress="if(event.key==='Enter') enviar()">
+    <button onclick="enviar()">Enviar</button>
+  </div>
+
+  <script>
+    let apiKey = "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";   
+
+    const chat = document.getElementById("chat");
+    const heartsContainer = document.getElementById("hearts");
+
+    const emojis = ["❤️", "💜", "🩷", "💙", "🌸", "🌺", "🍃", "🌼", "💖"];
+
+    function createEmoji() {
+      const emoji = document.createElement("div");
+      emoji.className = "emoji";
+      emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+      emoji.style.left = Math.random() * 100 + "vw";
+      emoji.style.animationDuration = (Math.random() * 12 + 9) + "s";
+      emoji.style.fontSize = (Math.random() * 18 + 22) + "px";
+      heartsContainer.appendChild(emoji);
+      setTimeout(() => emoji.remove(), 22000);
+    }
+
+    setInterval(createEmoji, 220);
+
+    function adicionarMensagem(texto, tipo) {
+      const div = document.createElement("div");
+      div.className = `mensagem ${tipo}`;
+      div.innerHTML = texto.replace(/\n/g, '<br><br>');
+      chat.appendChild(div);
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    async function processarMensagem(texto) {
+      const msg = texto.toLowerCase();
+
+      // Hora
+      if (msg.includes("hora") || msg.includes("horas")) {
+        return "Agora são " + new Date().toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
+      }
+
+      // Data
+      if (msg.includes("data") || msg.includes("dia")) {
+        return new Date().toLocaleDateString('pt-BR', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+      }
+
+      // Temperatura (cidade)
+      if (msg.includes("temperatura") || msg.includes("clima") || msg.includes("tempo")) {
+        const cidade = msg.replace(/temperatura|clima|tempo|em|de|na|no/g, "").trim() || "Imperatriz";
+        return await pegarTemperatura(cidade);
+      }
+
+      return await respostaIA(texto);
+    }
+
+    async function pegarTemperatura(cidade) {
+      try {
+        // API gratuita Open-Meteo
+        const res = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${cidade}`);
+        const geo = await res.json();
+        if (!geo.results) return `Não encontrei a cidade "${cidade}".`;
+
+        const lat = geo.results[0].latitude;
+        const lon = geo.results[0].longitude;
+
+        const weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=\( {lat}&longitude= \){lon}&current_weather=true`);
+        const weather = await weatherRes.json();
+
+        return `🌡️ Em ${cidade} está ${weather.current_weather.temperature}°C agora.`;
+      } catch (e) {
+        return "Não consegui pegar a temperatura no momento.";
+      }
+    }
+
+    async function respostaIA(texto) {
+      if (apiKey === "SUA_CHAVE_AQUI") return "Por favor, coloque sua chave da Groq.";
+
+      try {
+        const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+          method: "POST",
+          headers: { "Authorization": `Bearer ${apiKey}`, "Content-Type": "application/json" },
+          body: JSON.stringify({
+            model: "llama-3.3-70b-versatile",
+            messages: [{ role: "system", content: "Você é a DARK IA." }, { role: "user", content: texto }],
+            temperature: 0.75,
+            max_tokens: 800
+          })
+        });
+        const data = await res.json();
+        return data.choices[0].message.content;
+      } catch (e) {
+        return "Erro ao conectar com a DARK IA.";
+      }
+    }
+
+    async function enviar() {
+      const input = document.getElementById("input");
+      const texto = input.value.trim();
+      if (!texto) return;
+
+      adicionarMensagem(texto, "user");
+      input.value = "";
+
+      const resposta = await processarMensagem(texto);
+      adicionarMensagem(resposta, "dark");
+    }
+
+    adicionarMensagem("Olá! Eu sou a <strong>DARK IA</strong>.<br>Projeto criado pelo guilhermejesus.tech<br>Como posso te ajudar hoje?", "dark");
+  </script>
+</body>
+      </html>
