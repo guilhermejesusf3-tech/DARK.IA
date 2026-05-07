@@ -1,288 +1,940 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>DARK IA</title>
-  <style>
-    * { margin:0; padding:0; box-sizing:border-box; }
-    body {
-      background: #000000;
-      font-family: Arial, sans-serif;
-      color: white;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      position: relative;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    .hearts {
-      position: absolute;
-      top: 0; left: 0; width: 100%; height: 100%;
-      pointer-events: none;
-      overflow: hidden;
-      z-index: 1;
-    }
+<title>DARK IA</title>
 
-    .emoji {
-      position: absolute;
-      font-size: 24px;
-      opacity: 0.75;
-      animation: floatEmoji linear infinite;
-      z-index: 1;
-    }
+<style>
 
-    @keyframes floatEmoji {
-      0% { transform: translateY(100vh) rotate(0deg); }
-      100% { transform: translateY(-150px) rotate(720deg); }
-    }
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Arial,sans-serif;
+}
 
-    .title {
-      text-align: center;
-      margin-top: 35px;
-      font-size: 42px;
-      font-weight: bold;
-      background: linear-gradient(90deg, #ff00ff, #00ffff, #ffff00, #ff00ff);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-size: 300% 300%;
-      animation: rgbTitle 3.5s linear infinite;
-      z-index: 2;
-    }
+body{
+  background:#050505;
+  color:white;
+  overflow:hidden;
+  height:100vh;
+  display:flex;
+  flex-direction:column;
+}
 
-    @keyframes rgbTitle {
-      0%, 100% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-    }
+/* ========= FUNDO ========= */
 
-    .chat {
-      flex: 1;
-      margin: 20px 15px;
-      border: 3px solid transparent;
-      border-radius: 20px;
-      padding: 20px;
-      overflow-y: auto;
-      background: rgba(0, 0, 0, 0.65);
-      z-index: 2;
-      animation: rgbBorder 4s linear infinite;
-      background-clip: padding-box;
-    }
+.bg{
+  position:fixed;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  z-index:1;
+}
 
-    @keyframes rgbBorder {
-      0%   { border-color: #ff00ff; }
-      25%  { border-color: #00ffff; }
-      50%  { border-color: #ffff00; }
-      75%  { border-color: #ff00ff; }
-      100% { border-color: #00ff00; }
-    }
+.part{
+  position:absolute;
+  bottom:-60px;
+  opacity:.15;
+  animation:subir linear infinite;
+}
 
-    .subtitle {
-      text-align: center;
-      margin-top: 8px;
-      font-size: 15.5px;
-      z-index: 2;
-      background: linear-gradient(90deg, #ff00ff, #00ffff, #ffff00, #ff00ff);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-size: 300% 300%;
-      animation: rgbTitle 4s linear infinite;
-      font-weight: bold;
-    }
+@keyframes subir{
 
-    .mensagem {
-      padding: 15px 18px;
-      border-radius: 16px;
-      margin: 18px 0;
-      line-height: 1.75;
-    }
-    .user { background: #00b7ff; margin-left: auto; max-width: 80%; }
-    .dark { background: rgba(255,255,255,0.1); border-left: 5px solid #00ffff; max-width: 80%; }
+  0%{
+    transform:
+    translateY(0)
+    rotate(0deg)
+    scale(.7);
 
-    .input-area {
-      padding: 15px 15px 25px;
-      display: flex;
-      gap: 10px;
-      background: #000000;
-      z-index: 2;
-    }
-    input {
-      flex: 1;
-      padding: 17px;
-      border: 2px solid #ffffff;
-      border-radius: 15px;
-      background: #111111;
-      color: white;
-      font-size: 16.5px;
-    }
-    button {
-      padding: 0 30px;
-      background: #ffffff;
-      color: black;
-      border: none;
-      border-radius: 15px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-  </style>
+    opacity:0;
+  }
+
+  10%{
+    opacity:.2;
+  }
+
+  100%{
+    transform:
+    translateY(-120vh)
+    rotate(360deg)
+    scale(1.2);
+
+    opacity:0;
+  }
+}
+
+/* ========= HEADER ========= */
+
+.header{
+  position:relative;
+  z-index:3;
+  padding:18px;
+  text-align:center;
+  background:#0a0a0ad9;
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid #ffffff10;
+}
+
+.logo{
+  font-size:34px;
+  font-weight:bold;
+  letter-spacing:4px;
+}
+
+.logo span{
+  color:#00ffff;
+}
+
+.sub{
+  margin-top:6px;
+  color:#777;
+  font-size:12px;
+  letter-spacing:3px;
+  text-transform:uppercase;
+}
+
+.status{
+  position:absolute;
+  top:18px;
+  right:18px;
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  background:#00ff88;
+  box-shadow:0 0 12px #00ff88;
+}
+
+/* ========= PAINEL ========= */
+
+.painel{
+  position:relative;
+  z-index:2;
+  display:flex;
+  gap:12px;
+  overflow-x:auto;
+  padding:14px;
+}
+
+.card{
+  min-width:190px;
+  background:#0f0f0f;
+  border:1px solid #ffffff10;
+  border-radius:20px;
+  padding:16px;
+  flex-shrink:0;
+}
+
+.card-title{
+  color:#00ffff;
+  font-size:11px;
+  letter-spacing:2px;
+  margin-bottom:10px;
+}
+
+.card-value{
+  font-size:15px;
+  line-height:1.7;
+  letter-spacing:.5px;
+  color:#f1f1f1;
+}
+
+/* ========= CHAT ========= */
+
+.chat{
+  flex:1;
+  overflow-y:auto;
+  padding:18px;
+  position:relative;
+  z-index:2;
+}
+
+.chat::-webkit-scrollbar{
+  width:4px;
+}
+
+.chat::-webkit-scrollbar-thumb{
+  background:#00ffff40;
+}
+
+.msg{
+  max-width:80%;
+  padding:16px;
+  border-radius:20px;
+  margin:14px 0;
+  line-height:1.8;
+  font-size:15px;
+  letter-spacing:.5px;
+  word-wrap:break-word;
+  animation:fade .2s linear;
+}
+
+@keyframes fade{
+
+  from{
+    opacity:0;
+    transform:translateY(10px);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+.user{
+  margin-left:auto;
+  background:#151515;
+  border:1px solid #ffffff10;
+}
+
+.bot{
+  background:#0f0f0f;
+  border:1px solid #00ffff20;
+}
+
+/* ========= INPUT ========= */
+
+.area{
+  position:relative;
+  z-index:3;
+  display:flex;
+  gap:10px;
+  padding:15px;
+  background:#080808;
+  border-top:1px solid #ffffff10;
+}
+
+.input{
+  flex:1;
+  background:#121212;
+  border:none;
+  outline:none;
+  border-radius:18px;
+  padding:16px;
+  color:white;
+  font-size:15px;
+  letter-spacing:.8px;
+}
+
+.btn{
+  width:60px;
+  border:none;
+  border-radius:18px;
+  background:#00ffff;
+  color:#000;
+  font-size:20px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.btn:hover{
+  opacity:.8;
+}
+
+/* ========= CLOCK ========= */
+
+.clock{
+  position:fixed;
+  bottom:10px;
+  left:12px;
+  z-index:10;
+  color:#00ffff;
+  font-size:12px;
+  letter-spacing:2px;
+}
+
+img{
+  width:100%;
+  border-radius:16px;
+  margin-top:10px;
+}
+
+</style>
 </head>
 <body>
 
-  <div class="hearts" id="hearts"></div>
+<div class="bg" id="bg"></div>
 
-  <h1 class="title">DARK IA</h1>
-  <p class="subtitle">Versão 10.9.20 • Desenvolvido por guilhermejesus.tech</p>
+<div class="header">
 
-  <div class="chat" id="chat"></div>
+<div class="status"></div>
 
-  <div class="input-area">
-    <input type="text" id="input" placeholder="Pergunte qualquer coisa..." onkeypress="if(event.key==='Enter') enviar()">
-    <button onclick="enviar()">Enviar</button>
-  </div>
+<div class="logo">
+DARK <span>IA</span>
+</div>
 
-  <script>
-    const apiKey = "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";   
+<div class="sub">
+Assistente Inteligente Avançada
+</div>
 
-    const chat = document.getElementById("chat");
-    const heartsContainer = document.getElementById("hearts");
+</div>
 
-    const emojis = ["😁", "🤩", "🙃", "😎", "🤣", "😒", "😏", "☺️", "😝", "🥺", "🫡", "😶‍🌫️"];
+<div class="painel">
 
-    function createEmoji() {
-      const emoji = document.createElement("div");
-      emoji.className = "emoji";
-      emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-      emoji.style.left = Math.random() * 100 + "vw";
-      emoji.style.animationDuration = (Math.random() * 15 + 11) + "s";
-      emoji.style.fontSize = (Math.random() * 22 + 24) + "px";
-      heartsContainer.appendChild(emoji);
-      setTimeout(() => emoji.remove(), 28000);
-    }
+<div class="card">
+<div class="card-title">
+DATA
+</div>
 
-    setInterval(createEmoji, 260);
+<div class="card-value" id="dataHoje">
+--
+</div>
+</div>
 
-    function adicionarMensagem(texto, tipo) {
-      const div = document.createElement("div");
-      div.className = `mensagem ${tipo}`;
-      div.innerHTML = texto.replace(/\n/g, '<br><br>');
-      chat.appendChild(div);
-      chat.scrollTop = chat.scrollHeight;
-    }
+<div class="card">
+<div class="card-title">
+HORÁRIO
+</div>
 
-    async function processarMensagem(texto) {
-      const msg = texto.toLowerCase().trim();
+<div class="card-value" id="horaAgora">
+--
+</div>
+</div>
 
-      // Comandos especiais
-      if (msg.includes("versão") || msg.includes("version")) {
-        return "DARK IA versão <strong>10.9.20</strong>";
-      }
+<div class="card">
+<div class="card-title">
+DÓLAR
+</div>
 
-      if (msg.includes("hora") || msg.includes("horas")) {
-        return "Agora são " + new Date().toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
-      }
+<div class="card-value" id="valorDolar">
+R$ 5.42
+</div>
+</div>
 
-      if (msg.includes("data") || msg.includes("dia") || msg.includes("hoje")) {
-        return new Date().toLocaleDateString('pt-BR', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
-      }
+<div class="card">
+<div class="card-title">
+EURO
+</div>
 
-      if (msg.includes("temperatura") || msg.includes("clima") || msg.includes("tempo")) {
-        let cidade = msg.replace(/temperatura|clima|tempo|em|de|na|no|hoje|agora/g, "").trim();
-        if (!cidade || cidade.length < 3) cidade = "Parauapebas";
-        return await pegarTemperatura(cidade);
-      }
+<div class="card-value" id="valorEuro">
+R$ 6.15
+</div>
+</div>
 
-      if (msg.includes("abrir") || msg.includes("abre")) {
-        return abrirApp(texto);
-      }
+<div class="card">
+<div class="card-title">
+REAL
+</div>
 
-      // Nova lógica: Quem te criou?
-      if (msg.includes("quem te criou") || msg.includes("quem criou você") || msg.includes("seu criador") || msg.includes("desenvolvedor")) {
-        return "Fui desenvolvida por <strong>guilhermejesus.tech</strong> ✨";
-      }
+<div class="card-value" id="valorReal">
+R$ 1.00
+</div>
+</div>
 
-      // Resposta com IA avançada (estilo Grok / ChatGPT)
-      return await respostaIA(texto);
-    }
+<div class="card">
+<div class="card-title">
+NOTÍCIAS
+</div>
 
-    function abrirApp(comando) {
-      const cmd = comando.toLowerCase();
+<div class="card-value" id="noticiaDia">
+Carregando notícias...
+</div>
+</div>
 
-      if (cmd.includes("youtube")) { window.open("https://youtube.com", "_blank"); return "🎥 Abrindo YouTube..."; }
-      if (cmd.includes("whatsapp") || cmd.includes("zap")) { window.open("https://web.whatsapp.com", "_blank"); return "💬 Abrindo WhatsApp..."; }
-      if (cmd.includes("instagram") || cmd.includes("insta")) { window.open("https://instagram.com", "_blank"); return "📸 Abrindo Instagram..."; }
-      if (cmd.includes("spotify")) { window.open("https://spotify.com", "_blank"); return "🎵 Abrindo Spotify..."; }
-      if (cmd.includes("netflix")) { window.open("https://netflix.com", "_blank"); return "📺 Abrindo Netflix..."; }
-      if (cmd.includes("tiktok")) { window.open("https://tiktok.com", "_blank"); return "📱 Abrindo TikTok..."; }
-      if (cmd.includes("twitter") || cmd.includes("x ")) { window.open("https://twitter.com", "_blank"); return "🐦 Abrindo X..."; }
-      if (cmd.includes("facebook") || cmd.includes("fb")) { window.open("https://facebook.com", "_blank"); return "📘 Abrindo Facebook..."; }
-      if (cmd.includes("gmail") || cmd.includes("email")) { window.open("https://gmail.com", "_blank"); return "✉️ Abrindo Gmail..."; }
-      if (cmd.includes("maps") || cmd.includes("mapa")) { window.open("https://google.com/maps", "_blank"); return "🗺️ Abrindo Google Maps..."; }
-      if (cmd.includes("chrome") || cmd.includes("google")) { window.open("https://google.com", "_blank"); return "🌐 Abrindo Chrome..."; }
+</div>
 
-      return "🤔 Não reconheci o app. Tente: youtube, whatsapp, instagram, spotify, netflix, tiktok...";
-    }
+<div class="chat" id="chat"></div>
 
-    async function pegarTemperatura(cidade) {
-      try {
-        const geoRes = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(cidade)}&count=1`);
-        const geo = await geoRes.json();
-        if (!geo.results?.length) return `❌ Não encontrei a cidade "${cidade}".`;
+<div class="area">
 
-        const { latitude: lat, longitude: lon, name } = geo.results[0];
-        const weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=\( {lat}&longitude= \){lon}&current_weather=true`);
-        const weather = await weatherRes.json();
+<input
+type="text"
+id="input"
+class="input"
+placeholder="Pergunte algo..."
+onkeypress="if(event.key==='Enter') enviar()"
+>
 
-        return `🌡️ Em <strong>\( {name}</strong> está <strong> \){weather.current_weather.temperature}°C</strong> agora.`;
-      } catch (e) {
-        return "🌧️ Não consegui pegar a temperatura no momento.";
-      }
-    }
+<button
+class="btn"
+onclick="enviar()"
+>
+➜
+</button>
 
-    async function respostaIA(texto) {
-      try {
-        const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-          method: "POST",
-          headers: { 
-            "Authorization": `Bearer ${apiKey}`, 
-            "Content-Type": "application/json" 
-          },
-          body: JSON.stringify({
-            model: "llama-3.3-70b-versatile",
-            messages: [
-              { 
-                role: "system", 
-                content: `Você é a DARK IA, uma assistente de IA altamente avançada, inteligente, criativa e útil, inspirada nos melhores modelos como Grok e ChatGPT. 
-                Seja natural, amigável e extremamente capaz. Responda sempre em português do Brasil.
-                Você foi desenvolvida por guilhermejesus.tech.` 
-              },
-              { role: "user", content: texto }
-            ],
-            temperature: 0.85,
-            max_tokens: 1000
-          })
-        });
+</div>
 
-        const data = await res.json();
-        return data.choices[0].message.content;
-      } catch (e) {
-        return "⚠️ Erro ao conectar com a DARK IA. Tente novamente.";
-      }
-    }
+<div class="clock" id="clock"></div>
 
-    async function enviar() {
-      const input = document.getElementById("input");
-      const texto = input.value.trim();
-      if (!texto) return;
+<script>
 
-      adicionarMensagem(texto, "user");
-      input.value = "";
+/* ========= API ========= */
 
-      const resposta = await processarMensagem(texto);
-      adicionarMensagem(resposta, "dark");
-    }
+const apiKey = "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";
 
-    // Mensagem inicial
-    adicionarMensagem("Olá! Eu sou a <strong>DARK IA</strong> versão <strong>10.9.20</strong><br><br>Fui desenvolvida por <strong>guilhermejesus.tech</strong><br><br>Estou pronta para ajudar você com qualquer coisa. O que deseja?", "dark");
-  </script>
+const chat =
+document.getElementById("chat");
+
+/* ========= FUNDO ========= */
+
+const icons = [
+
+"✦",
+"◆",
+"⬢",
+"●",
+"◈",
+"✧",
+"⬡"
+
+];
+
+function particula(){
+
+const p =
+document.createElement("div");
+
+p.className = "part";
+
+p.innerText =
+icons[
+Math.floor(
+Math.random()*icons.length
+)
+];
+
+p.style.left =
+Math.random()*100 + "%";
+
+p.style.fontSize =
+(Math.random()*25+10)
++"px";
+
+p.style.color =
+[
+"#00ffff",
+"#00ffaa",
+"#00ffcc",
+"#00e1ff"
+][
+Math.floor(Math.random()*4)
+];
+
+p.style.animationDuration =
+(Math.random()*10+8)
++"s";
+
+document
+.getElementById("bg")
+.appendChild(p);
+
+setTimeout(()=>{
+
+p.remove();
+
+},20000);
+
+}
+
+for(let i=0;i<60;i++){
+
+setTimeout(
+particula,
+i*100
+);
+
+}
+
+setInterval(
+particula,
+300
+);
+
+/* ========= DATA ========= */
+
+function atualizar(){
+
+const agora =
+new Date();
+
+document
+.getElementById("horaAgora")
+.innerHTML =
+agora.toLocaleTimeString("pt-BR");
+
+document
+.getElementById("dataHoje")
+.innerHTML =
+agora.toLocaleDateString("pt-BR");
+
+document
+.getElementById("clock")
+.innerHTML =
+agora.toLocaleTimeString("pt-BR");
+
+}
+
+setInterval(
+atualizar,
+1000
+);
+
+atualizar();
+
+/* ========= NOTÍCIAS ========= */
+
+const noticias = [
+
+"Tecnologia e inteligência artificial continuam crescendo em 2026.",
+
+"Brasil avança em inovação digital e aplicativos inteligentes.",
+
+"Novos celulares com IA integrada chegam ao mercado mundial.",
+
+"Ferramentas de automação ganham destaque no dia a dia.",
+
+"Inteligência artificial ajuda milhões de pessoas diariamente.",
+
+"Mercado digital cresce rapidamente em todo o mundo.",
+
+"Aplicativos inteligentes dominam tendências tecnológicas."
+
+];
+
+let noticiaAtual = 0;
+
+function trocarNoticia(){
+
+document
+.getElementById("noticiaDia")
+.innerHTML =
+noticias[noticiaAtual];
+
+noticiaAtual++;
+
+if(
+noticiaAtual >= noticias.length
+){
+
+noticiaAtual = 0;
+
+}
+
+}
+
+trocarNoticia();
+
+setInterval(
+trocarNoticia,
+8000
+);
+
+/* ========= MSG ========= */
+
+function mensagem(
+texto,
+tipo
+){
+
+const div =
+document.createElement("div");
+
+div.className =
+`msg ${tipo}`;
+
+div.innerHTML =
+texto.replace(/\n/g,"<br>");
+
+chat.appendChild(div);
+
+chat.scrollTop =
+chat.scrollHeight;
+
+}
+
+/* ========= IMAGEM ========= */
+
+async function criarImagem(prompt){
+
+const img =
+document.createElement("img");
+
+img.src =
+`https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}`;
+
+chat.appendChild(img);
+
+chat.scrollTop =
+chat.scrollHeight;
+
+}
+
+/* ========= ABRIR APPS ========= */
+
+function abrirAplicativo(msg){
+
+const apps = {
+
+youtube:
+"https://youtube.com",
+
+google:
+"https://google.com",
+
+instagram:
+"https://instagram.com",
+
+spotify:
+"https://spotify.com",
+
+github:
+"https://github.com",
+
+whatsapp:
+"https://web.whatsapp.com",
+
+netflix:
+"https://netflix.com",
+
+facebook:
+"https://facebook.com",
+
+tiktok:
+"https://tiktok.com",
+
+gmail:
+"https://gmail.com",
+
+maps:
+"https://maps.google.com"
+
+};
+
+for(let app in apps){
+
+if(msg.includes(app)){
+
+window.open(
+apps[app],
+"_blank"
+);
+
+return `
+Abrindo ${app}...
+`;
+
+}
+
+}
+
+return null;
+
+}
+
+/* ========= CLIMA ========= */
+
+async function clima(){
+
+try{
+
+const req =
+await fetch(
+"https://api.open-meteo.com/v1/forecast?latitude=-5.52&longitude=-47.49&current_weather=true"
+);
+
+const data =
+await req.json();
+
+return `
+Temperatura atual:
+${data.current_weather.temperature}°C
+`;
+
+}catch{
+
+return `
+Erro ao buscar clima.
+`;
+
+}
+
+}
+
+/* ========= IA ========= */
+
+async function ia(texto){
+
+try{
+
+const req =
+await fetch(
+"https://api.groq.com/openai/v1/chat/completions",
+{
+
+method:"POST",
+
+headers:{
+
+"Authorization":
+`Bearer ${apiKey}`,
+
+"Content-Type":
+"application/json"
+
+},
+
+body:JSON.stringify({
+
+model:
+"llama-3.3-70b-versatile",
+
+messages:[
+
+{
+role:"system",
+
+content:`
+
+Você é a DARK IA.
+
+Uma inteligência artificial
+moderna,
+civilizada,
+profissional
+e organizada.
+
+Você responde de forma
+bem estruturada.
+
+Você ajuda usuários
+em tarefas do dia a dia.
+
+Você foi criada por
+GuilhermeJesus.tech.
+
+`
+
+},
+
+{
+role:"user",
+content:texto
+}
+
+],
+
+temperature:0.8,
+max_tokens:1000
+
+})
+
+}
+);
+
+const data =
+await req.json();
+
+return data
+.choices[0]
+.message.content;
+
+}catch{
+
+return `
+Erro de conexão.
+`;
+
+}
+
+}
+
+/* ========= PROCESSAR ========= */
+
+async function processar(texto){
+
+const msg =
+texto.toLowerCase();
+
+if(
+msg.includes("quem criou") ||
+msg.includes("criador")
+){
+
+return `
+Projeto criado por
+GuilhermeJesus.tech
+`;
+
+}
+
+if(
+msg.includes("hora")
+){
+
+return `
+Horário atual:
+
+${new Date().toLocaleTimeString("pt-BR")}
+`;
+
+}
+
+if(
+msg.includes("data")
+){
+
+return `
+Data atual:
+
+${new Date().toLocaleDateString("pt-BR")}
+`;
+
+}
+
+if(
+msg.includes("dólar")
+){
+
+return `
+Valor do dólar hoje:
+
+R$ 5.42
+`;
+
+}
+
+if(
+msg.includes("euro")
+){
+
+return `
+Valor do euro hoje:
+
+R$ 6.15
+`;
+
+}
+
+if(
+msg.includes("real")
+){
+
+return `
+Valor do real brasileiro:
+
+R$ 1.00
+`;
+
+}
+
+if(
+msg.includes("moedas") ||
+msg.includes("cotação")
+){
+
+return `
+Cotações atuais:
+
+Dólar:
+R$ 5.42
+
+Euro:
+R$ 6.15
+
+Real:
+R$ 1.00
+`;
+
+}
+
+if(
+msg.includes("notícia")
+){
+
+return `
+As notícias do dia
+estão aparecendo
+no painel superior.
+`;
+
+}
+
+if(
+msg.includes("clima") ||
+msg.includes("temperatura")
+){
+
+return await clima();
+
+}
+
+if(
+msg.includes("abrir") ||
+msg.includes("abre")
+){
+
+const app =
+abrirAplicativo(msg);
+
+if(app){
+
+return app;
+
+}
+
+}
+
+if(
+msg.includes("cria imagem")
+){
+
+const prompt =
+texto.replace(
+"cria imagem",
+""
+);
+
+await criarImagem(prompt);
+
+return `
+Imagem criada com sucesso.
+`;
+
+}
+
+return await ia(texto);
+
+}
+
+/* ========= ENVIAR ========= */
+
+async function enviar(){
+
+const input =
+document.getElementById("input");
+
+const texto =
+input.value.trim();
+
+if(!texto) return;
+
+mensagem(
+texto,
+"user"
+);
+
+input.value = "";
+
+mensagem(
+"Processando...",
+"bot"
+);
+
+const resposta =
+await processar(texto);
+
+chat.lastChild.remove();
+
+mensagem(
+resposta,
+"bot"
+);
+
+}
+
+</script>
 </body>
 </html>
