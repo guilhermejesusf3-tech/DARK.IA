@@ -23,6 +23,9 @@ body{
   display:flex;
   flex-direction:column;
   transition:.4s;
+  background-size:cover;
+  background-position:center;
+  background-repeat:no-repeat;
 }
 
 /* ========= FUNDO ========= */
@@ -49,7 +52,6 @@ body{
     translateY(0)
     rotate(0deg)
     scale(.7);
-
     opacity:0;
   }
 
@@ -62,7 +64,6 @@ body{
     translateY(-120vh)
     rotate(360deg)
     scale(1.2);
-
     opacity:0;
   }
 }
@@ -338,6 +339,13 @@ oninput="mudarCorTexto()"
 value="#ffffff"
 >
 
+<input
+type="file"
+id="fotoFundo"
+accept="image/*"
+onchange="mudarFotoFundo(event)"
+>
+
 <button onclick="modoEscuro()">
 PRETO
 </button>
@@ -399,16 +407,6 @@ REAL
 
 <div class="card-value">
 R$ 1.00
-</div>
-</div>
-
-<div class="card">
-<div class="card-title">
-NOTÍCIAS
-</div>
-
-<div class="card-value" id="noticiaDia">
-Carregando...
 </div>
 </div>
 
@@ -539,6 +537,9 @@ document
 document.body.style.background =
 cor;
 
+document.body.style.backgroundImage =
+"none";
+
 }
 
 function mudarCorTexto(){
@@ -553,6 +554,28 @@ cor;
 
 }
 
+function mudarFotoFundo(event){
+
+const arquivo =
+event.target.files[0];
+
+if(!arquivo) return;
+
+const leitor =
+new FileReader();
+
+leitor.onload =
+function(e){
+
+document.body.style.backgroundImage =
+`url('${e.target.result}')`;
+
+};
+
+leitor.readAsDataURL(arquivo);
+
+}
+
 function modoEscuro(){
 
 document.body.style.background =
@@ -560,6 +583,9 @@ document.body.style.background =
 
 document.body.style.color =
 "#ffffff";
+
+document.body.style.backgroundImage =
+"none";
 
 }
 
@@ -570,6 +596,9 @@ document.body.style.background =
 
 document.body.style.color =
 "#000000";
+
+document.body.style.backgroundImage =
+"none";
 
 }
 
@@ -603,50 +632,6 @@ atualizar,
 );
 
 atualizar();
-
-/* ========= NOTÍCIAS ========= */
-
-const noticias = [
-
-"Tecnologia e inteligência artificial continuam crescendo em 2026.",
-
-"Brasil avança em inovação digital e aplicativos inteligentes.",
-
-"Novos celulares com IA integrada chegam ao mercado mundial.",
-
-"Ferramentas de automação ganham destaque no dia a dia.",
-
-"Inteligência artificial ajuda milhões de pessoas diariamente."
-
-];
-
-let noticiaAtual = 0;
-
-function trocarNoticia(){
-
-document
-.getElementById("noticiaDia")
-.innerHTML =
-noticias[noticiaAtual];
-
-noticiaAtual++;
-
-if(
-noticiaAtual >= noticias.length
-){
-
-noticiaAtual = 0;
-
-}
-
-}
-
-trocarNoticia();
-
-setInterval(
-trocarNoticia,
-8000
-);
 
 /* ========= MENSAGEM ========= */
 
@@ -734,7 +719,16 @@ twitter:
 "https://twitter.com",
 
 discord:
-"https://discord.com/app"
+"https://discord.com/app",
+
+chrome:
+"https://google.com",
+
+drive:
+"https://drive.google.com",
+
+linkedin:
+"https://linkedin.com"
 
 };
 
@@ -758,36 +752,6 @@ Abrindo ${app}...
 return `
 Aplicativo não encontrado.
 `;
-
-}
-
-/* ========= CLIMA ========= */
-
-async function clima(){
-
-try{
-
-const req =
-await fetch(
-"https://api.open-meteo.com/v1/forecast?latitude=-5.52&longitude=-47.49&current_weather=true"
-);
-
-const data =
-await req.json();
-
-return `
-Temperatura atual:
-
-${data.current_weather.temperature}°C
-`;
-
-}catch{
-
-return `
-Erro ao buscar clima.
-`;
-
-}
 
 }
 
@@ -834,9 +798,6 @@ civilizada,
 profissional,
 organizada
 e inteligente.
-
-Você responde de forma
-bem estruturada.
 
 Você foi criada por
 GuilhermeJesus.tech.
@@ -953,44 +914,6 @@ Valor do real:
 
 R$ 1.00
 `;
-
-}
-
-if(
-msg.includes("moedas")
-){
-
-return `
-Moedas atuais:
-
-Dólar:
-R$ 5.42
-
-Euro:
-R$ 6.15
-
-Real:
-R$ 1.00
-`;
-
-}
-
-if(
-msg.includes("notícia")
-){
-
-return `
-As notícias estão aparecendo no painel superior.
-`;
-
-}
-
-if(
-msg.includes("clima") ||
-msg.includes("temperatura")
-){
-
-return await clima();
 
 }
 
