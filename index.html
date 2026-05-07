@@ -17,11 +17,12 @@
 
 body{
   background:#050505;
-  color:white;
+  color:#fff;
   overflow:hidden;
   height:100vh;
   display:flex;
   flex-direction:column;
+  transition:.4s;
 }
 
 /* ========= FUNDO ========= */
@@ -81,7 +82,7 @@ body{
 .logo{
   font-size:34px;
   font-weight:bold;
-  letter-spacing:4px;
+  letter-spacing:5px;
 }
 
 .logo span{
@@ -105,6 +106,38 @@ body{
   border-radius:50%;
   background:#00ff88;
   box-shadow:0 0 12px #00ff88;
+}
+
+/* ========= CUSTOMIZAÇÃO ========= */
+
+.custom-box{
+  position:relative;
+  z-index:3;
+  display:flex;
+  gap:10px;
+  padding:12px;
+  overflow-x:auto;
+  background:#080808;
+  border-bottom:1px solid #ffffff10;
+}
+
+.custom-box select,
+.custom-box input,
+.custom-box button{
+
+  border:none;
+  outline:none;
+  padding:10px 14px;
+  border-radius:14px;
+  background:#111;
+  color:white;
+  cursor:pointer;
+  min-height:45px;
+  transition:.3s;
+}
+
+.custom-box button:hover{
+  opacity:.8;
 }
 
 /* ========= PAINEL ========= */
@@ -234,8 +267,6 @@ body{
   opacity:.8;
 }
 
-/* ========= CLOCK ========= */
-
 .clock{
   position:fixed;
   bottom:10px;
@@ -256,7 +287,11 @@ img{
 </head>
 <body>
 
+<!-- ========= FUNDO ========= -->
+
 <div class="bg" id="bg"></div>
+
+<!-- ========= HEADER ========= -->
 
 <div class="header">
 
@@ -271,6 +306,49 @@ Assistente Inteligente Avançada
 </div>
 
 </div>
+
+<!-- ========= CUSTOMIZAÇÃO ========= -->
+
+<div class="custom-box">
+
+<select id="emojiSelect" onchange="trocarEmoji()">
+
+<option value="✦">✦</option>
+<option value="◆">◆</option>
+<option value="⬢">⬢</option>
+<option value="●">●</option>
+<option value="❤">❤</option>
+<option value="🔥">🔥</option>
+<option value="⭐">⭐</option>
+<option value="⚡">⚡</option>
+
+</select>
+
+<input
+type="color"
+id="corFundo"
+oninput="mudarCorFundo()"
+value="#050505"
+>
+
+<input
+type="color"
+id="corTexto"
+oninput="mudarCorTexto()"
+value="#ffffff"
+>
+
+<button onclick="modoEscuro()">
+PRETO
+</button>
+
+<button onclick="modoBranco()">
+BRANCO
+</button>
+
+</div>
+
+<!-- ========= PAINEL ========= -->
 
 <div class="painel">
 
@@ -299,7 +377,7 @@ HORÁRIO
 DÓLAR
 </div>
 
-<div class="card-value" id="valorDolar">
+<div class="card-value">
 R$ 5.42
 </div>
 </div>
@@ -309,7 +387,7 @@ R$ 5.42
 EURO
 </div>
 
-<div class="card-value" id="valorEuro">
+<div class="card-value">
 R$ 6.15
 </div>
 </div>
@@ -319,7 +397,7 @@ R$ 6.15
 REAL
 </div>
 
-<div class="card-value" id="valorReal">
+<div class="card-value">
 R$ 1.00
 </div>
 </div>
@@ -330,13 +408,17 @@ NOTÍCIAS
 </div>
 
 <div class="card-value" id="noticiaDia">
-Carregando notícias...
+Carregando...
 </div>
 </div>
 
 </div>
+
+<!-- ========= CHAT ========= -->
 
 <div class="chat" id="chat"></div>
+
+<!-- ========= INPUT ========= -->
 
 <div class="area">
 
@@ -365,22 +447,27 @@ onclick="enviar()"
 
 const apiKey = "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";
 
+/* ========= CHAT ========= */
+
 const chat =
 document.getElementById("chat");
 
-/* ========= FUNDO ========= */
+/* ========= EMOJI ========= */
 
-const icons = [
+let emojiAtual = "✦";
 
-"✦",
-"◆",
-"⬢",
-"●",
-"◈",
-"✧",
-"⬡"
+/* ========= TROCAR EMOJI ========= */
 
-];
+function trocarEmoji(){
+
+emojiAtual =
+document
+.getElementById("emojiSelect")
+.value;
+
+}
+
+/* ========= PARTÍCULAS ========= */
 
 function particula(){
 
@@ -390,11 +477,7 @@ document.createElement("div");
 p.className = "part";
 
 p.innerText =
-icons[
-Math.floor(
-Math.random()*icons.length
-)
-];
+emojiAtual;
 
 p.style.left =
 Math.random()*100 + "%";
@@ -408,9 +491,10 @@ p.style.color =
 "#00ffff",
 "#00ffaa",
 "#00ffcc",
-"#00e1ff"
+"#00e1ff",
+"#ffffff"
 ][
-Math.floor(Math.random()*4)
+Math.floor(Math.random()*5)
 ];
 
 p.style.animationDuration =
@@ -442,6 +526,52 @@ setInterval(
 particula,
 300
 );
+
+/* ========= CUSTOMIZAÇÃO ========= */
+
+function mudarCorFundo(){
+
+const cor =
+document
+.getElementById("corFundo")
+.value;
+
+document.body.style.background =
+cor;
+
+}
+
+function mudarCorTexto(){
+
+const cor =
+document
+.getElementById("corTexto")
+.value;
+
+document.body.style.color =
+cor;
+
+}
+
+function modoEscuro(){
+
+document.body.style.background =
+"#050505";
+
+document.body.style.color =
+"#ffffff";
+
+}
+
+function modoBranco(){
+
+document.body.style.background =
+"#f1f1f1";
+
+document.body.style.color =
+"#000000";
+
+}
 
 /* ========= DATA ========= */
 
@@ -486,11 +616,7 @@ const noticias = [
 
 "Ferramentas de automação ganham destaque no dia a dia.",
 
-"Inteligência artificial ajuda milhões de pessoas diariamente.",
-
-"Mercado digital cresce rapidamente em todo o mundo.",
-
-"Aplicativos inteligentes dominam tendências tecnológicas."
+"Inteligência artificial ajuda milhões de pessoas diariamente."
 
 ];
 
@@ -522,7 +648,7 @@ trocarNoticia,
 8000
 );
 
-/* ========= MSG ========= */
+/* ========= MENSAGEM ========= */
 
 function mensagem(
 texto,
@@ -562,7 +688,7 @@ chat.scrollHeight;
 
 }
 
-/* ========= ABRIR APPS ========= */
+/* ========= APPS ========= */
 
 function abrirAplicativo(msg){
 
@@ -599,7 +725,16 @@ gmail:
 "https://gmail.com",
 
 maps:
-"https://maps.google.com"
+"https://maps.google.com",
+
+telegram:
+"https://web.telegram.org",
+
+twitter:
+"https://twitter.com",
+
+discord:
+"https://discord.com/app"
 
 };
 
@@ -620,7 +755,9 @@ Abrindo ${app}...
 
 }
 
-return null;
+return `
+Aplicativo não encontrado.
+`;
 
 }
 
@@ -640,6 +777,7 @@ await req.json();
 
 return `
 Temperatura atual:
+
 ${data.current_weather.temperature}°C
 `;
 
@@ -693,14 +831,12 @@ Você é a DARK IA.
 Uma inteligência artificial
 moderna,
 civilizada,
-profissional
-e organizada.
+profissional,
+organizada
+e inteligente.
 
 Você responde de forma
 bem estruturada.
-
-Você ajuda usuários
-em tarefas do dia a dia.
 
 Você foi criada por
 GuilhermeJesus.tech.
@@ -789,7 +925,7 @@ msg.includes("dólar")
 ){
 
 return `
-Valor do dólar hoje:
+Valor do dólar:
 
 R$ 5.42
 `;
@@ -801,7 +937,7 @@ msg.includes("euro")
 ){
 
 return `
-Valor do euro hoje:
+Valor do euro:
 
 R$ 6.15
 `;
@@ -813,7 +949,7 @@ msg.includes("real")
 ){
 
 return `
-Valor do real brasileiro:
+Valor do real:
 
 R$ 1.00
 `;
@@ -821,12 +957,11 @@ R$ 1.00
 }
 
 if(
-msg.includes("moedas") ||
-msg.includes("cotação")
+msg.includes("moedas")
 ){
 
 return `
-Cotações atuais:
+Moedas atuais:
 
 Dólar:
 R$ 5.42
@@ -845,9 +980,7 @@ msg.includes("notícia")
 ){
 
 return `
-As notícias do dia
-estão aparecendo
-no painel superior.
+As notícias estão aparecendo no painel superior.
 `;
 
 }
@@ -866,14 +999,7 @@ msg.includes("abrir") ||
 msg.includes("abre")
 ){
 
-const app =
-abrirAplicativo(msg);
-
-if(app){
-
-return app;
-
-}
+return abrirAplicativo(msg);
 
 }
 
