@@ -28,7 +28,7 @@ body{
   background-repeat:no-repeat;
 }
 
-/* ========= FUNDO ========= */
+/* FUNDO */
 
 .bg{
   position:fixed;
@@ -68,7 +68,7 @@ body{
   }
 }
 
-/* ========= HEADER ========= */
+/* HEADER */
 
 .header{
   position:relative;
@@ -98,18 +98,7 @@ body{
   text-transform:uppercase;
 }
 
-.status{
-  position:absolute;
-  top:18px;
-  right:18px;
-  width:10px;
-  height:10px;
-  border-radius:50%;
-  background:#00ff88;
-  box-shadow:0 0 12px #00ff88;
-}
-
-/* ========= CUSTOMIZAÇÃO ========= */
+/* CUSTOM */
 
 .custom-box{
   position:relative;
@@ -134,48 +123,9 @@ body{
   color:white;
   cursor:pointer;
   min-height:45px;
-  transition:.3s;
 }
 
-.custom-box button:hover{
-  opacity:.8;
-}
-
-/* ========= PAINEL ========= */
-
-.painel{
-  position:relative;
-  z-index:2;
-  display:flex;
-  gap:12px;
-  overflow-x:auto;
-  padding:14px;
-}
-
-.card{
-  min-width:190px;
-  background:#0f0f0f;
-  border:1px solid #ffffff10;
-  border-radius:20px;
-  padding:16px;
-  flex-shrink:0;
-}
-
-.card-title{
-  color:#00ffff;
-  font-size:11px;
-  letter-spacing:2px;
-  margin-bottom:10px;
-}
-
-.card-value{
-  font-size:15px;
-  line-height:1.7;
-  letter-spacing:.5px;
-  color:#f1f1f1;
-}
-
-/* ========= CHAT ========= */
+/* CHAT */
 
 .chat{
   flex:1;
@@ -183,14 +133,6 @@ body{
   padding:18px;
   position:relative;
   z-index:2;
-}
-
-.chat::-webkit-scrollbar{
-  width:4px;
-}
-
-.chat::-webkit-scrollbar-thumb{
-  background:#00ffff40;
 }
 
 .msg{
@@ -202,20 +144,6 @@ body{
   font-size:15px;
   letter-spacing:.5px;
   word-wrap:break-word;
-  animation:fade .2s linear;
-}
-
-@keyframes fade{
-
-  from{
-    opacity:0;
-    transform:translateY(10px);
-  }
-
-  to{
-    opacity:1;
-    transform:translateY(0);
-  }
 }
 
 .user{
@@ -229,7 +157,7 @@ body{
   border:1px solid #00ffff20;
 }
 
-/* ========= INPUT ========= */
+/* INPUT */
 
 .area{
   position:relative;
@@ -250,7 +178,6 @@ body{
   padding:16px;
   color:white;
   font-size:15px;
-  letter-spacing:.8px;
 }
 
 .btn{
@@ -260,22 +187,12 @@ body{
   background:#00ffff;
   color:#000;
   font-size:20px;
-  font-weight:bold;
   cursor:pointer;
 }
 
-.btn:hover{
-  opacity:.8;
-}
-
-.clock{
-  position:fixed;
-  bottom:10px;
-  left:12px;
-  z-index:10;
-  color:#00ffff;
-  font-size:12px;
-  letter-spacing:2px;
+audio{
+  width:100%;
+  margin-top:10px;
 }
 
 img{
@@ -288,40 +205,38 @@ img{
 </head>
 <body>
 
-<!-- ========= FUNDO ========= -->
+<!-- FUNDO -->
 
 <div class="bg" id="bg"></div>
 
-<!-- ========= HEADER ========= -->
+<!-- HEADER -->
 
 <div class="header">
-
-<div class="status"></div>
 
 <div class="logo">
 DARK <span>IA</span>
 </div>
 
 <div class="sub">
-Assistente Inteligente Avançada
+Projeto criado por GuilhermeJesus.tech
 </div>
 
 </div>
 
-<!-- ========= CUSTOMIZAÇÃO ========= -->
+<!-- CUSTOMIZAÇÃO -->
 
 <div class="custom-box">
 
 <select id="emojiSelect" onchange="trocarEmoji()">
 
-<option value="😛">😛</option>
+<option value="🤩">🤩</option>
+<option value="☺️">☺️</option>
+<option value="😏">😏</option>
+<option value="😎">😎</option>
 <option value="😶‍🌫️">😶‍🌫️</option>
 <option value="🥰">🥰</option>
-<option value="😉">😉</option>
-<option value="😏">😏</option>
+<option value="😁">😁</option>
 <option value="😝">😝</option>
-<option value="☺️">☺️</option>
-<option value="😍">😍</option>
 
 </select>
 
@@ -341,9 +256,14 @@ value="#ffffff"
 
 <input
 type="file"
-id="fotoFundo"
 accept="image/*"
 onchange="mudarFotoFundo(event)"
+>
+
+<input
+type="file"
+accept="audio/*"
+onchange="carregarMusica(event)"
 >
 
 <button onclick="modoEscuro()">
@@ -356,67 +276,11 @@ BRANCO
 
 </div>
 
-<!-- ========= PAINEL ========= -->
-
-<div class="painel">
-
-<div class="card">
-<div class="card-title">
-DATA
-</div>
-
-<div class="card-value" id="dataHoje">
---
-</div>
-</div>
-
-<div class="card">
-<div class="card-title">
-HORÁRIO
-</div>
-
-<div class="card-value" id="horaAgora">
---
-</div>
-</div>
-
-<div class="card">
-<div class="card-title">
-DÓLAR
-</div>
-
-<div class="card-value">
-R$ 5.42
-</div>
-</div>
-
-<div class="card">
-<div class="card-title">
-EURO
-</div>
-
-<div class="card-value">
-R$ 6.15
-</div>
-</div>
-
-<div class="card">
-<div class="card-title">
-REAL
-</div>
-
-<div class="card-value">
-R$ 1.00
-</div>
-</div>
-
-</div>
-
-<!-- ========= CHAT ========= -->
+<!-- CHAT -->
 
 <div class="chat" id="chat"></div>
 
-<!-- ========= INPUT ========= -->
+<!-- INPUT -->
 
 <div class="area">
 
@@ -437,24 +301,22 @@ onclick="enviar()"
 
 </div>
 
-<div class="clock" id="clock"></div>
-
 <script>
 
-/* ========= API ========= */
+/* API */
 
 const apiKey = "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";
 
-/* ========= CHAT ========= */
+/* CHAT */
 
 const chat =
 document.getElementById("chat");
 
-/* ========= EMOJI ========= */
+/* EMOJI */
 
 let emojiAtual = "✦";
 
-/* ========= TROCAR EMOJI ========= */
+/* TROCAR EMOJI */
 
 function trocarEmoji(){
 
@@ -465,7 +327,7 @@ document
 
 }
 
-/* ========= PARTÍCULAS ========= */
+/* PARTÍCULAS */
 
 function particula(){
 
@@ -488,11 +350,9 @@ p.style.color =
 [
 "#00ffff",
 "#00ffaa",
-"#00ffcc",
-"#00e1ff",
 "#ffffff"
 ][
-Math.floor(Math.random()*5)
+Math.floor(Math.random()*3)
 ];
 
 p.style.animationDuration =
@@ -525,7 +385,7 @@ particula,
 300
 );
 
-/* ========= CUSTOMIZAÇÃO ========= */
+/* CUSTOM */
 
 function mudarCorFundo(){
 
@@ -602,38 +462,40 @@ document.body.style.backgroundImage =
 
 }
 
-/* ========= DATA ========= */
+/* MÚSICA */
 
-function atualizar(){
+function carregarMusica(event){
 
-const agora =
-new Date();
+const arquivo =
+event.target.files[0];
 
-document
-.getElementById("horaAgora")
-.innerHTML =
-agora.toLocaleTimeString("pt-BR");
+if(!arquivo) return;
 
-document
-.getElementById("dataHoje")
-.innerHTML =
-agora.toLocaleDateString("pt-BR");
+const url =
+URL.createObjectURL(arquivo);
 
-document
-.getElementById("clock")
-.innerHTML =
-agora.toLocaleTimeString("pt-BR");
+const audio =
+document.createElement("audio");
+
+audio.controls = true;
+
+audio.autoplay = true;
+
+audio.src = url;
+
+chat.appendChild(audio);
+
+chat.scrollTop =
+chat.scrollHeight;
+
+mensagem(
+"Playlist carregada com sucesso.",
+"bot"
+);
 
 }
 
-setInterval(
-atualizar,
-1000
-);
-
-atualizar();
-
-/* ========= MENSAGEM ========= */
+/* MENSAGEM */
 
 function mensagem(
 texto,
@@ -656,7 +518,7 @@ chat.scrollHeight;
 
 }
 
-/* ========= IMAGEM ========= */
+/* IMAGEM */
 
 async function criarImagem(prompt){
 
@@ -673,7 +535,7 @@ chat.scrollHeight;
 
 }
 
-/* ========= APPS ========= */
+/* ABRIR APPS */
 
 function abrirAplicativo(msg){
 
@@ -755,7 +617,7 @@ Aplicativo não encontrado.
 
 }
 
-/* ========= IA ========= */
+/* IA */
 
 async function ia(texto){
 
@@ -792,15 +654,14 @@ content:`
 
 Você é a DARK IA.
 
-Uma inteligência artificial
-moderna,
-civilizada,
-profissional,
-organizada
-e inteligente.
-
 Você foi criada por
 GuilhermeJesus.tech.
+
+Você é moderna,
+organizada,
+profissional,
+inteligente
+e amigável.
 
 `
 
@@ -838,7 +699,7 @@ Erro de conexão.
 
 }
 
-/* ========= PROCESSAR ========= */
+/* PROCESSAR */
 
 async function processar(texto){
 
@@ -846,8 +707,7 @@ const msg =
 texto.toLowerCase();
 
 if(
-msg.includes("quem criou") ||
-msg.includes("criador")
+msg.includes("quem criou")
 ){
 
 return `
@@ -862,8 +722,6 @@ msg.includes("hora")
 ){
 
 return `
-Horário atual:
-
 ${new Date().toLocaleTimeString("pt-BR")}
 `;
 
@@ -874,45 +732,7 @@ msg.includes("data")
 ){
 
 return `
-Data atual:
-
 ${new Date().toLocaleDateString("pt-BR")}
-`;
-
-}
-
-if(
-msg.includes("dólar")
-){
-
-return `
-Valor do dólar:
-
-R$ 5.42
-`;
-
-}
-
-if(
-msg.includes("euro")
-){
-
-return `
-Valor do euro:
-
-R$ 6.15
-`;
-
-}
-
-if(
-msg.includes("real")
-){
-
-return `
-Valor do real:
-
-R$ 1.00
 `;
 
 }
@@ -939,7 +759,7 @@ texto.replace(
 await criarImagem(prompt);
 
 return `
-Imagem criada com sucesso.
+Imagem criada.
 `;
 
 }
@@ -948,7 +768,7 @@ return await ia(texto);
 
 }
 
-/* ========= ENVIAR ========= */
+/* ENVIAR */
 
 async function enviar(){
 
